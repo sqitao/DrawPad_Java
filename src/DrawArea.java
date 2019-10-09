@@ -3,10 +3,15 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,6 +23,8 @@ import javax.swing.border.LineBorder;
 public class DrawArea extends JPanel {
     DrawPad drawpad = null;
     Drawing[] itemList = new Drawing[5000];// 绘制图形及相关参数全部存到该数组
+    
+    private BufferedImage imgBuff;	//image buff
 
     int chooseni = 0;// 当前选中图形的数组下标
     int x0, y0;//记录移动图形鼠标起始位置
@@ -33,6 +40,10 @@ public class DrawArea extends JPanel {
 
     DrawArea(DrawPad dp) {
         drawpad = dp;
+        
+        //create image buff
+        //image =  new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_RGB);
+        
         setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         // 把鼠标设置成十字形
         setBackground(Color.white);// 设置绘制区的背景是白色
@@ -43,12 +54,45 @@ public class DrawArea extends JPanel {
 
     public void paintComponent(Graphics g) {// repaint()需要调用
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
+        
+        //create image buff
+        if(null == imgBuff) {
+        	imgBuff =  new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_RGB);
+        }
+        
+        //Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) imgBuff.getGraphics();
+        g2d.clearRect(0, 0, this.getWidth(),this.getHeight()); //reset the buff
+
+        //draw all items
         int j = 0;
         while (j <= index) {
             draw(g2d, itemList[j]);
             j++;
         } // 将itemList数组重画一遍
+        
+        //draw the imgBuff
+        g.drawImage(imgBuff, 0, 0, this);	
+    }
+    
+    /**
+     * Save Image
+     */
+    public void saveImage(String filename) {
+    	    	
+    	//check buff
+    	if(null == imgBuff) {
+    		return;
+    	}
+    	
+    	//save to file
+  		File outputfile  = new File(filename + ".png");
+  		try {
+  			ImageIO.write(imgBuff,"png",outputfile);
+  		} catch (IOException e1) {
+  			// TODO Auto-generated catch block
+  			e1.printStackTrace();
+  		}
     }
 
     void draw(Graphics2D g2d, Drawing i) {

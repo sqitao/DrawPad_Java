@@ -112,4 +112,29 @@ public class FileClass {
             }
         }
     }
+    
+    /**
+     * Save Image
+     */
+    public void saveImage() {
+    	//JFileChooser 为用户选择文件提供了一种简单的机制
+        JFileChooser filechooser = new JFileChooser();
+        filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        //setFileSelectionMode()设置 JFileChooser，以允许用户只选择文件、只选择目录，或者可选择文件和目录。
+        int result = filechooser.showSaveDialog(drawpad);
+        if (result == JFileChooser.CANCEL_OPTION) {
+            return;
+        }
+
+        File fileName = filechooser.getSelectedFile();//getSelectedFile()返回选中的文件
+        fileName.canWrite();//测试应用程序是否可以修改此抽象路径名表示的文件
+        if (fileName == null || fileName.getName().equals(""))//文件名不存在时
+        {
+            JOptionPane.showMessageDialog(filechooser, "文件名", "请输入文件名！", JOptionPane.ERROR_MESSAGE);
+        } else {
+        	fileName.delete();//删除此抽象路径名表示的文件或目录
+        	String name = fileName.getAbsolutePath();
+        	this.drawarea.saveImage(name);
+        }
+    }
 }

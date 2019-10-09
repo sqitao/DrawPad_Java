@@ -29,7 +29,7 @@ public class DrawPad extends JFrame implements ActionListener {
     private JToolBar buttonpanel;//定义按钮面板
     private JMenuBar bar;//定义菜单条
     private JMenu file, color, stroke, help, edit;//定义菜单
-    private JMenuItem newfile, openfile, savefile, exit;//file 菜单中的菜单项
+    private JMenuItem newfile, openfile, savefile, saveImage, exit;//file 菜单中的菜单项
     private JMenuItem helpin, helpmain, colorchoice, strokeitem;//help 菜单中的菜单项
     private JMenuItem editgraph, editcolor, editstroke, edittext;//编辑菜单中的选项
     private Icon nf, sf, of;//文件菜单项的图标对象
@@ -92,12 +92,14 @@ public class DrawPad extends JFrame implements ActionListener {
         newfile = new JMenuItem("新建", nf);
         openfile = new JMenuItem("打开", of);
         savefile = new JMenuItem("保存", sf);
+        saveImage = new JMenuItem("保存图像", sf);
         exit = new JMenuItem("退出");
 
         //File菜单中添加菜单项
         file.add(newfile);
         file.add(openfile);
         file.add(savefile);
+        file.add(saveImage);
         file.add(exit);
 
         //File菜单项添加快捷键
@@ -110,6 +112,7 @@ public class DrawPad extends JFrame implements ActionListener {
         newfile.addActionListener(this);
         openfile.addActionListener(this);
         savefile.addActionListener(this);
+        saveImage.addActionListener(this);
         exit.addActionListener(this);
 
         //Color菜单项的初始化
@@ -302,7 +305,9 @@ public class DrawPad extends JFrame implements ActionListener {
             fileclass.openFile();//打开
         } else if (e.getSource() == savefile || e.getSource() == button[2]) {
             fileclass.saveFile();//保存
-        } else if (e.getSource() == exit) {
+        } else if (e.getSource() == saveImage ) {
+            fileclass.saveImage();//保存图像
+        }else if (e.getSource() == exit) {
             System.exit(0);//退出程序
         } else if (e.getSource() == colorchoice) {
             drawarea.chooseColor();//颜色的选择
